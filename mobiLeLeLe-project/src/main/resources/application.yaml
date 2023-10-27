@@ -1,0 +1,35 @@
+#TODO: make .yaml file
+
+spring:
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mobiLeLeLe?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+    username: ${DEFAULT_DB_USER:root}
+    password: ${DEFAULT_DB_PASSWORD:}
+#  sql:
+#    init:
+#      mode: always
+  jpa:
+#    replaces ?-> spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    generate-ddl: true
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+server:
+  port: 8000
+  servlet:
+    session:
+      timeout: 5
