@@ -22,23 +22,31 @@ public class Book extends BaseEntity {
         return title;
     }
 
-    public void setTitle(String title) {
+    public Book setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(Author author) {
+    public Book setAuthor(Author author) {
         this.author = author;
+        return this;
     }
 
     public UUID getIsbn() {
         return isbn;
     }
 
-    public void setIsbn() {
+    public Book setIsbn(UUID isbn) {
+        this.isbn = isbn;
+        return this;
+    }
+
+    public Book setRandomIsbn() {
         this.isbn = UUID.randomUUID();
+        return this;
     }
 }

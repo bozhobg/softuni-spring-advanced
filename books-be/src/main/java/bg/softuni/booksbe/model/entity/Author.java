@@ -28,8 +28,9 @@ public class Author extends BaseEntity{
         return name;
     }
 
-    public void setName(String name) {
+    public Author setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Set<Book> getBooks() {
