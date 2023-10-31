@@ -9,15 +9,26 @@
 //             </tr>
 
 window.addEventListener('load', solve);
-
 function solve() {
+    const BASE_URL = 'http://localhost:8000/api/books';
     let loadBooksBtn = document.getElementById('loadBooks');
     loadBooksBtn.addEventListener('click', loadBooksBtnClickHandler);
 
     let tableBody = document.getElementById('books-container');
 
+    let formInputs = {
+        title: () => document.getElementById('title'),
+        authorName: () => document.getElementById('author'),
+        isbn: () => document.getElementById('isbn')
+    }
+    let submitBtn = document.querySelector("form > button");
+
+    clearFormInputs();
+
+    submitBtn.addEventListener('click', submitClickHandler);
+
     async function loadBooksBtnClickHandler() {
-        let res = await fetch('http://localhost:8000/api/books');
+        let res = await fetch(`${BASE_URL}`);
         let books = await res.json();
         tableBody.innerHTML = '';
 
@@ -49,7 +60,7 @@ function solve() {
 
         let editBtn = document.createElement('button');
         editBtn.textContent = 'EDIT';
-        editBtn.addEventListner('click', editHandler);
+        editBtn.addEventListener('click', editHandler);
         cellBtns.appendChild(editBtn);
 
         let deleteBtn = document.createElement('button');
@@ -63,11 +74,71 @@ function solve() {
     }
 
     function editHandler(event) {
-                
+        let id = event.target.parentNode.parentNode.dataset.id;
+
+        fetch(`${BASE_URL}/${id}`)
+            .then((res) => res.json())
+            .then((data) => fillInputsData(data));
+        // debugger;
     }
 
     function deleteHandler(event) {
+        let id = event.target.parentNode.parentNode.dataset.id;
+        let http = {
+            method: "DELETE"
+        }
+        fetch(`${BASE_URL}`, http)
+            .then(() => loadBooksBtnClickHandler())
+    }
 
+    function submitClickHandler(event) {
+        event.preventDefault();
+
+        let data = getInputsData();
+        let reqUrl = BASE_URL;
+        let id = '';
+        let http = {
+            headers: {'Content-Type': 'application/json'},
+            method: 'POST'
+        };
+
+        if ('id' in submitBtn.dataset) {
+            id = submitBtn.dataset.id;
+            http.method = 'PUT';
+            reqUrl = `${BASE_URL}/${id}`
+        }
+
+        http.body = JSON.stringify(data);
+
+        fetch(reqUrl, http)
+            .then(() => {
+                clearFormInputs();
+                loadBooksBtnClickHandler();
+            });
+    }
+
+    function getInputsData() {
+        let data = {};
+        for (const inp in formInputs) {
+            data[inp] = formInputs[inp]().value;
+        }
+
+        return data;
+    }
+
+    function fillInputsData(data) {
+        for (const inp in formInputs) {
+            formInputs[inp]().value = data[inp];
+        }
+        submitBtn.dataset.id = data.id;
+    }
+
+    function clearFormInputs() {
+        for (const inp in formInputs) {
+            formInputs[inp]().value = '';
+        }
+
+        delete submitBtn.dataset.id;
     }
 
 }
