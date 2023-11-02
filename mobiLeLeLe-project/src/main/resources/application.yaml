@@ -6,13 +6,13 @@ spring:
     url: jdbc:mysql://localhost:3306/mobiLeLeLe?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
     username: ${DEFAULT_DB_USER:root}
     password: ${DEFAULT_DB_PASSWORD:}
-#  sql:
-#    init:
-#      mode: always
+  sql:
+    init:
+      mode: never
   jpa:
 #    replaces ?-> spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQL8Dialect
     database-platform: org.hibernate.dialect.MySQL8Dialect
-#    defer-datasource-initialization: true
+    defer-datasource-initialization: true
     properties:
       hibernate:
         format_sql: true
@@ -24,6 +24,10 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  security:
+    user:
+      name: user1
+      password: 1234
 logging:
   level:
     org.hibernate.SQL: DEBUG

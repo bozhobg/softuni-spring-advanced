@@ -36,7 +36,7 @@ public class Offer extends BasicEntity{
     private Model model;
     @ManyToOne
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    private User seller;
+    private UserEntity seller;
 
     public Offer() {
     }
@@ -51,7 +51,7 @@ public class Offer extends BasicEntity{
             , Integer year
             , LocalDateTime created
             , Model model
-            , User seller
+            , UserEntity seller
     ) {
         this.description = description;
         this.engine = engine;
@@ -155,11 +155,11 @@ public class Offer extends BasicEntity{
         return this;
     }
 
-    public User getSeller() {
+    public UserEntity getSeller() {
         return seller;
     }
 
-    public Offer setSeller(User seller) {
+    public Offer setSeller(UserEntity seller) {
         this.seller = seller;
         return this;
     }

@@ -2,7 +2,7 @@ package bg.softuni.mobiLeLeLe.service.impl;
 
 import bg.softuni.mobiLeLeLe.model.dto.UserLoginDto;
 import bg.softuni.mobiLeLeLe.model.dto.UserRegistrationDto;
-import bg.softuni.mobiLeLeLe.model.entity.User;
+import bg.softuni.mobiLeLeLe.model.entity.UserEntity;
 import bg.softuni.mobiLeLeLe.model.enums.Role;
 import bg.softuni.mobiLeLeLe.repository.UserRepository;
 import bg.softuni.mobiLeLeLe.repository.UserRoleRepository;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     public boolean isLoginValid(UserLoginDto userLoginDto) {
 //            TODO: what's the logic/handling here?
 
-        User userEntity = this.userRepository.findUserByUsername(userLoginDto.username())
+        UserEntity userEntity = this.userRepository.findUserByUsername(userLoginDto.username())
                 .orElse(null);
 
         boolean isLoggedIn = false;
@@ -80,10 +80,10 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private User mapToUser(UserRegistrationDto regDto) {
+    private UserEntity mapToUser(UserRegistrationDto regDto) {
 
 
-        return new User()
+        return new UserEntity()
                 .setUsername(regDto.username())
                 .setPassword(passwordEncoder.encode(regDto.password()))
                 .setFirstName(regDto.firstName())

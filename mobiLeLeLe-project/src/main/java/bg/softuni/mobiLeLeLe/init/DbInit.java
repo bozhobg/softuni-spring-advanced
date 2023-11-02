@@ -1,6 +1,6 @@
 package bg.softuni.mobiLeLeLe.init;
 
-import bg.softuni.mobiLeLeLe.model.entity.User;
+import bg.softuni.mobiLeLeLe.model.entity.UserEntity;
 import bg.softuni.mobiLeLeLe.model.entity.UserRole;
 import bg.softuni.mobiLeLeLe.model.enums.Role;
 import bg.softuni.mobiLeLeLe.repository.UserRepository;
@@ -50,9 +50,9 @@ public class DbInit implements CommandLineRunner {
 
     private void initUsers() {
 //        TODO: init users from here not data.sql to preserve pass encoding
-        if (userRepository.count() > 3) return;
+        if (userRepository.count() <= 5) return;
 
-        User admin = new User()
+        UserEntity admin = new UserEntity()
                 .setUsername("admin")
                 .setPassword(passwordEncoder.encode("1234"))
                 .setFirstName("Admin")
@@ -64,7 +64,7 @@ public class DbInit implements CommandLineRunner {
                 )
                 .setCreated(LocalDateTime.now());
 
-        User tom = new User()
+        UserEntity tom = new UserEntity()
                 .setUsername("tom")
                 .setPassword(passwordEncoder.encode("1234"))
                 .setFirstName("Tom")
