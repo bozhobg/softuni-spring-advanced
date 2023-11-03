@@ -7,7 +7,7 @@ import bg.softuni.mobiLeLeLe.model.dto.OfferDetailsDto;
 import java.util.List;
 
 public interface OfferService {
-    boolean addOffer (OfferCreateUpdateDto offerCreateUpdateDto, Long userId);
+    boolean addOffer (OfferCreateUpdateDto offerCreateUpdateDto, String username);
 
     OfferCreateUpdateDto getOfferDto(Long id);
 
@@ -19,4 +19,5 @@ public interface OfferService {
     boolean updateOffer(OfferCreateUpdateDto offerDto, Long offerId);
 
     boolean deleteOffer(Long offerId);
+    boolean isUsernameOfferSeller(String username, Long offerId);
 }

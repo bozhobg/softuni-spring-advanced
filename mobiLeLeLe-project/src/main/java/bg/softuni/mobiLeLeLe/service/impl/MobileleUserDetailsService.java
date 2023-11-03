@@ -10,14 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import java.util.Optional;
 
-
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class MobileleUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(UserRepository userRepository) {
+    public MobileleUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -26,11 +24,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         UserDetails ud =
                 this.userRepository.findUserByUsername(username)
-                        .map(UserDetailsServiceImpl::map)
+                        .map(MobileleUserDetailsService::map)
                         .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials!"));
 
         return ud;
     }
+
+
 
     private static UserDetails map(UserEntity userEntity) {
         return User.withUsername(userEntity.getUsername())

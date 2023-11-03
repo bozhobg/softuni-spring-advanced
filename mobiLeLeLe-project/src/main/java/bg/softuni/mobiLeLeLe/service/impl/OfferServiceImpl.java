@@ -3,7 +3,9 @@ package bg.softuni.mobiLeLeLe.service.impl;
 import bg.softuni.mobiLeLeLe.model.dto.OfferBasicDto;
 import bg.softuni.mobiLeLeLe.model.dto.OfferCreateUpdateDto;
 import bg.softuni.mobiLeLeLe.model.dto.OfferDetailsDto;
+import bg.softuni.mobiLeLeLe.model.entity.BasicEntity;
 import bg.softuni.mobiLeLeLe.model.entity.Offer;
+import bg.softuni.mobiLeLeLe.model.entity.UserEntity;
 import bg.softuni.mobiLeLeLe.repository.ModelRepository;
 import bg.softuni.mobiLeLeLe.repository.OfferRepository;
 import bg.softuni.mobiLeLeLe.repository.UserRepository;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,12 +38,12 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public boolean addOffer(
             OfferCreateUpdateDto offerCreateUpdateDto
-            , Long userId
+            , String username
     ) {
         boolean isAdded = false;
 
         try {
-            this.offerRepository.save(mapFromOfferCreateDto(offerCreateUpdateDto, userId));
+            this.offerRepository.save(mapFromOfferCreateDto(offerCreateUpdateDto, username));
             isAdded = true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -103,7 +106,7 @@ public class OfferServiceImpl implements OfferService {
 
         try {
             this.offerRepository.save(offer);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
             return false;
@@ -122,6 +125,16 @@ public class OfferServiceImpl implements OfferService {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean isUsernameOfferSeller(String username, Long offerId) {
+        Long offerSellerId = this.offerRepository.findSellerIdByOfferid(offerId);
+        Long userId = this.userRepository.findUserByUsername(username)
+                .map(BasicEntity::getId)
+                .orElse(null);
+
+        return offerSellerId.equals(userId);
     }
 
     private OfferDetailsDto mapToOfferDetailsDto(Offer o) {
@@ -161,7 +174,7 @@ public class OfferServiceImpl implements OfferService {
         );
     }
 
-    private Offer mapFromOfferCreateDto(OfferCreateUpdateDto offerCreateUpdateDto, Long userId) {
+    private Offer mapFromOfferCreateDto(OfferCreateUpdateDto offerCreateUpdateDto, String username) {
         return new Offer(
                 offerCreateUpdateDto.description()
                 , offerCreateUpdateDto.engine()
@@ -175,7 +188,7 @@ public class OfferServiceImpl implements OfferService {
                 .findById(offerCreateUpdateDto.modelId())
                 .orElseThrow()
                 , this.userRepository
-                .findById(userId)
+                .findUserByUsername(username)
                 .orElseThrow());
     }
 

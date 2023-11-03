@@ -7,7 +7,6 @@ import bg.softuni.mobiLeLeLe.model.enums.Role;
 import bg.softuni.mobiLeLeLe.repository.UserRepository;
 import bg.softuni.mobiLeLeLe.repository.UserRoleRepository;
 import bg.softuni.mobiLeLeLe.service.UserService;
-import bg.softuni.mobiLeLeLe.util.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,19 +18,16 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final CurrentUser currentUser;
 
     @Autowired
     public UserServiceImpl(
             UserRepository userRepository,
             UserRoleRepository userRoleRepository,
-            PasswordEncoder passwordEncoder,
-            CurrentUser currentUser) {
-
+            PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.currentUser = currentUser;
     }
 
     @Override
@@ -42,8 +38,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isLoginValid(UserLoginDto userLoginDto) {
-//            TODO: what's the logic/handling here?
-
+/*
         UserEntity userEntity = this.userRepository.findUserByUsername(userLoginDto.username())
                 .orElse(null);
 
@@ -72,11 +67,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return isLoggedIn;
+*/
+        return false;
     }
 
     @Override
     public void logoutUser() {
-        currentUser.logout();
+//        removing current user approach, due to implementation of Spring Security
+//        currentUser.logout();
     }
 
 

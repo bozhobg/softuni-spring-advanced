@@ -50,7 +50,7 @@ public class DbInit implements CommandLineRunner {
 
     private void initUsers() {
 //        TODO: init users from here not data.sql to preserve pass encoding
-        if (userRepository.count() <= 5) return;
+        if (userRepository.count() > 3) return;
 
         UserEntity admin = new UserEntity()
                 .setUsername("admin")
