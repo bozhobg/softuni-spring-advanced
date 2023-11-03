@@ -38,3 +38,5 @@ server:
   servlet:
     session:
       timeout: 5
+mobilele:
+  remember.me.key: ${REMEMBER_ME_KEY:1234}

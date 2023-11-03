@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 
+// UserDetailsService may be implemented directly by UserServiceImpl?
 public class MobileleUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
