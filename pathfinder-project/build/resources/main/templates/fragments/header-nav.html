@@ -1,0 +1,44 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<header th:fragment="header-nav" th:object="${@currentUser}">
+    <nav class="main-nav">
+        <ul>
+            <li>
+                <a th:href="@{/}">Home</a>
+            </li>
+            <li th:if="!*{logged}">
+                <a th:href="@{/users/login}">Login</a>
+            </li>
+            <li th:if="!*{logged}">
+                <a th:href="@{/users/register}">Register</a>
+            </li>
+            <li th:if="!*{logged}">
+                <a th:href="@{/about}">About</a>
+            </li>
+            <li th:if="*{logged}">
+                <a th:href="@{/routes/add}">Add new route</a>
+            </li>
+            <li th:if="*{logged}">
+                <a th:href="@{/users/profile/{id}(id=*{id})}">Profile</a>
+            </li>
+            <li th:if="${#lists.contains(@currentUser.roles, 'ADMIN')}">
+                    <a th:href="@{/}">Admin</a>
+            </li>
+            <li th:if="*{logged}">
+                <form th:action="@{/users/logout}"
+                      th:method="post">
+                    <button type="submit" id="logout-btn">Logout</button>
+                </form>
+
+<!--                <a th:href="@{/}">Logout</a>-->
+            </li>
+        </ul>
+    </nav>
+</header>
+</body>
+</html>

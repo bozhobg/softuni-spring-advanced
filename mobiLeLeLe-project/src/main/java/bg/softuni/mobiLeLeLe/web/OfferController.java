@@ -28,9 +28,10 @@ public class OfferController {
 
     @Autowired
     public OfferController(
-            OfferService offerService
-            , BrandService brandService,
-            MobileleUserDetailsService mobileleUserDetailsService) {
+            OfferService offerService,
+            BrandService brandService,
+            MobileleUserDetailsService mobileleUserDetailsService
+    ){
         this.offerService = offerService;
         this.brandService = brandService;
         this.mobileleUserDetailsService = mobileleUserDetailsService;
