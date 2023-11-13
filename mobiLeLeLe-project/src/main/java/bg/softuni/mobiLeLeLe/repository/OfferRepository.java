@@ -13,4 +13,5 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     )
     Long findSellerIdByOfferid(@Param("offerId") Long offerId);
 
+
 }

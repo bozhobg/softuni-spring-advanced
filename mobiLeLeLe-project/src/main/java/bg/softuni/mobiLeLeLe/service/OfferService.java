@@ -16,8 +16,8 @@ public interface OfferService {
     OfferDetailsDto getOfferDetailsDto(Long id);
 
     Long findSellerIdByOfferId(Long offerId);
-    boolean updateOffer(OfferCreateUpdateDto offerDto, Long offerId);
+    void updateOffer(OfferCreateUpdateDto offerDto, Long offerId);
 
-    boolean deleteOffer(Long offerId);
+    void deleteOffer(Long offerId);
     boolean isUsernameOfferSeller(String username, Long offerId);
 }

@@ -15,17 +15,19 @@ public class OfferCreateUpdateDto {
         private Long id;
         @NotEmpty
         private String description;
-        @PositiveOrZero
+        @NotNull
         private Engine engine;
         @NotEmpty
         private String imageUrl;
+        @NotNull
         @Min(0)
         @Max(900000)
         private Integer mileage;
         @PositiveOrZero
         private BigDecimal price;
-        @NotEmpty
+        @NotNull
         private Transmission transmission;
+        @NotNull
         @ValidYear
         private Integer year;
         private LocalDateTime created;

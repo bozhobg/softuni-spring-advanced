@@ -48,8 +48,8 @@
             <!--Price input-->
             <div class="form-group col-md-6 mb-3">
                 <label for="price" class="text-white font-weight-bold">Price</label>
-                <input th:feld="*{price}"
-                       th:field="*{price}"
+                <input th:field="*{price}"
+                       th:value = "*{price}"
                        name="price"
                        id="price" type="number" min="0" step="100" class="form-control"
                        placeholder="Suggested price"/>

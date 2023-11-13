@@ -2,6 +2,7 @@ package bg.softuni.mobiLeLeLe.service.impl;
 
 import bg.softuni.mobiLeLeLe.exceptions.ExceptionMessages;
 import bg.softuni.mobiLeLeLe.exceptions.NotFoundException;
+import bg.softuni.mobiLeLeLe.exceptions.PersistException;
 import bg.softuni.mobiLeLeLe.model.dto.OfferBasicDto;
 import bg.softuni.mobiLeLeLe.model.dto.OfferCreateUpdateDto;
 import bg.softuni.mobiLeLeLe.model.dto.OfferDetailsDto;
@@ -45,7 +46,10 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public OfferCreateUpdateDto getOfferDto(Long id) {
-        return mapToOfferCreateDto(this.offerRepository.findById(id).orElseThrow());
+        if (id == null) throw new NotFoundException(ExceptionMessages.OFFER_NOT_FOUND + "null");
+
+        return mapToOfferCreateDto(this.offerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ExceptionMessages.OFFER_NOT_FOUND + id)));
     }
 
     @Override
@@ -69,7 +73,8 @@ public class OfferServiceImpl implements OfferService {
     public OfferDetailsDto getOfferDetailsDto(Long id) {
 
         return mapToOfferDetailsDto(
-                this.offerRepository.findById(id).get());
+                this.offerRepository.findById(id)
+                        .orElseThrow(() -> new NotFoundException(ExceptionMessages.OFFER_NOT_FOUND + id)));
     }
 
     @Override
@@ -78,7 +83,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public boolean updateOffer(OfferCreateUpdateDto dto, Long offerId) {
+    public void updateOffer(OfferCreateUpdateDto dto, Long offerId) {
         Offer offer = this.offerRepository.findById(offerId).orElseThrow();
 
         offer.setDescription(dto.getDescription())
@@ -95,27 +100,23 @@ public class OfferServiceImpl implements OfferService {
                 .setImageUrl(dto.getImageUrl())
                 .setYear(dto.getYear());
 
+//        TODO: handle custom post for diff offer id than the what is meant by page
+
         try {
             this.offerRepository.save(offer);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return false;
+            throw new PersistException(ExceptionMessages.OFFER_NOT_FOUND + dto.getId());
         }
 
-        return true;
     }
 
     @Override
-    public boolean deleteOffer(Long offerId) {
-//        TODO: throw error and handle
-        if (this.offerRepository.existsById(offerId)) {
-            this.offerRepository.deleteById(offerId);
-
-            return true;
+    public void deleteOffer(Long offerId) {
+        if (offerId == null || !this.offerRepository.existsById(offerId)) {
+            throw new NotFoundException("Invalid offer id: " + offerId);
         }
 
-        return false;
+        this.offerRepository.deleteById(offerId);
     }
 
     @Override
@@ -175,11 +176,11 @@ public class OfferServiceImpl implements OfferService {
                 , dto.getYear()
                 , LocalDateTime.now()
                 , this.modelRepository
-                    .findById(dto.getModelId())
-                    .orElseThrow(() -> new NotFoundException(ExceptionMessages.MODEL_NOT_FOUND_ID + dto.getModelId()))
+                .findById(dto.getModelId())
+                .orElseThrow(() -> new NotFoundException(ExceptionMessages.MODEL_NOT_FOUND_ID + dto.getModelId()))
                 , this.userRepository
-                    .findUserByUsername(username)
-                    .orElseThrow(() -> new NotFoundException(ExceptionMessages.USERNAME_NOT_FOUND + username)));
+                .findUserByUsername(username)
+                .orElseThrow(() -> new NotFoundException(ExceptionMessages.USERNAME_NOT_FOUND + username)));
     }
 
 }

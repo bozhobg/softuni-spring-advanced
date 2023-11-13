@@ -9,6 +9,8 @@ public class ValidYearValidator implements ConstraintValidator<ValidYear, Intege
     @Override
     public boolean isValid(Integer value, ConstraintValidatorContext context) {
 
+        if (value == null) return false;
+
         return Year.now().compareTo(Year.of(value)) >= 0;
     }
 }
