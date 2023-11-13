@@ -1,5 +1,8 @@
 package bg.softuni.mobiLeLeLe.web;
 
+import bg.softuni.mobiLeLeLe.exceptions.DbException;
+import bg.softuni.mobiLeLeLe.exceptions.NotFoundException;
+import bg.softuni.mobiLeLeLe.exceptions.PersistException;
 import bg.softuni.mobiLeLeLe.model.dto.OfferCreateUpdateDto;
 import bg.softuni.mobiLeLeLe.model.dto.OfferDetailsDto;
 import bg.softuni.mobiLeLeLe.model.enums.Engine;
@@ -8,12 +11,16 @@ import bg.softuni.mobiLeLeLe.service.BrandService;
 import bg.softuni.mobiLeLeLe.service.OfferService;
 //import bg.softuni.mobiLeLeLe.util.CurrentUser;
 import bg.softuni.mobiLeLeLe.service.impl.MobileleUserDetailsService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
@@ -31,7 +38,7 @@ public class OfferController {
             OfferService offerService,
             BrandService brandService,
             MobileleUserDetailsService mobileleUserDetailsService
-    ){
+    ) {
         this.offerService = offerService;
         this.brandService = brandService;
         this.mobileleUserDetailsService = mobileleUserDetailsService;
@@ -46,38 +53,45 @@ public class OfferController {
     }
 
     @GetMapping("/add")
-    public String addLoad(
-            ModelMap modelMap
-    ) {
+    public String addLoad(ModelMap modelMap) {
         getModelMapWithOfferAttributes(modelMap);
+        if (!modelMap.containsAttribute("addBindingModel")) {
+            modelMap.addAttribute("addBindingModel", new OfferCreateUpdateDto());
+        }
 
         return "offer-add";
     }
 
     @PostMapping("/add")
     public String addSubmit(
-            OfferCreateUpdateDto offerDto,
+            @Valid @ModelAttribute("addBindingModel") OfferCreateUpdateDto offerDto,
+            BindingResult bindingResult,
+            RedirectAttributes rAttrs,
             Principal principal
     ) {
 
-        String username = principal.getName();
-
-        RedirectView rv = new RedirectView();
-        boolean isCreated = this.offerService.addOffer(offerDto, username);
-
-        if (isCreated) {
-            rv.setStatusCode(HttpStatus.CREATED);
-//            mam = new ModelAndView("redirect:/offers");
-//            mam.setStatus(HttpStatus.CREATED);
-
-            return "redirect:/offers/all";
-        } else {
-            rv = new RedirectView("/offers/add");
-            rv.setStatusCode(HttpStatus.BAD_REQUEST);
+        if (bindingResult.hasErrors()) {
+            rAttrs.addFlashAttribute("addBindingModel", offerDto);
+            rAttrs.addFlashAttribute(
+                "org.springframework.validation.BindingResult.addBindingModel",
+                    bindingResult
+            );
 
             return "redirect:/offers/add";
         }
 
+        String username = principal.getName();
+        Long newOfferId = this.offerService.addOffer(offerDto, username);
+
+        return "redirect:/offers/details/" + newOfferId;
+    }
+
+    @ExceptionHandler(DbException.class)
+    public ModelAndView handleAddExceptions(Exception e) {
+        ModelAndView mav = new ModelAndView("error");
+        mav.addObject("error", e.getMessage());
+
+        return mav;
     }
 
     @GetMapping("/details/{id}")

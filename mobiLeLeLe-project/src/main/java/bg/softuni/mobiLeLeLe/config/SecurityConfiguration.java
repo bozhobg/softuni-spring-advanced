@@ -33,7 +33,8 @@ public class SecurityConfiguration {
                                         "/users/login-error",
                                         "/users/register",
                                         "/offers/all",
-                                        "/brands/all"
+                                        "/brands/all",
+                                        "/error"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 ).formLogin(formLogin ->

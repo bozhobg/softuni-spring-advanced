@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!-- Custom response code err page, returned for the file name response code -->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="~{fragments/head}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:include="~{fragments/navbar}"></div>
+
+<div class="container-fluid">
+
+    <h5 class="text-center text-white mt-5">
+        <div><strong>What you're looking for is missing!</strong></div>
+        <img class="text-center" src="/images/dude-where-is-my-car.png" alt="broken car image"><br>
+    </h5>
+
+</div>
+</body>
+</html>

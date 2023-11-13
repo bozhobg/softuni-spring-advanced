@@ -32,7 +32,7 @@ public class MobileleUserDetailsService implements UserDetailsService {
     }
 
 
-
+//    Use static methods whenever possible, code allows
     private static UserDetails map(UserEntity userEntity) {
         return User.withUsername(userEntity.getUsername())
                 .password(userEntity.getPassword())
@@ -41,6 +41,7 @@ public class MobileleUserDetailsService implements UserDetailsService {
                 .build();
     }
 
+//    Use static methods whenever possible, code allows
     private static GrantedAuthority map(UserRole userRole) {
         return new SimpleGrantedAuthority("ROLE_" + userRole.getRole().name());
     }
